@@ -1,0 +1,46 @@
+##############################################################
+# Learning Series: Network Programmability Basics
+# Module: Other Topics
+# Lesson: Introduction to NetScaler Programmability
+# Author: Hank Preston <hapresto@cisco.com>
+#
+# Illustrate the following concepts:
+# - Leveraging Ansible with NetScaler
+##############################################################
+---
+- name: Example 1 - Managing Loadbalancing Servers
+  hosts: lb
+  connection: local
+  gather_facts: False
+  vars_prompt:
+    - name: "prefix"
+      prompt: "What are your initials?"
+      private: no
+    - name: "subnet"
+      prompt: "What is your Subnet?"
+      private: no
+  vars:
+    lbvservers:
+      - name: "{{ prefix }}_Application_1"
+        ipv46: "192.168.{{ subnet }}.201"
+        port: 80
+        servicetype: HTTP
+        lbmethod: LEASTCONNECTION
+        backuplbmethod: ROUNDROBIN
+
+  tasks:
+    - name: Create Load Balancing vServers
+      netscaler_lb_vserver:
+        nsip: "{{ ansible_host }}"
+        nitro_protocol: https
+        validate_certs: no
+        nitro_user: "{{ username }}"
+        nitro_pass: "{{ password }}"
+        state: "present"
+        name: "{{ item.name }}"
+        servicetype: "{{ item.servicetype }}"
+        port: "{{ item.port }}"
+        ipv46: "{{ item.ipv46 }}"
+        lbmethod: "{{ item.lbmethod }}"
+        backuplbmethod: "{{ item.backuplbmethod }}"
+      with_items: "{{ lbvservers }}"

@@ -1,0 +1,7 @@
+[lb:vars]
+username=<NetScaler Username>
+password=<NetScaler Password>
+ansible_python_interpreter="/usr/bin/env python"
+
+[lb]
+<Enter NetScaler IP>

@@ -1,0 +1,71 @@
+##############################################################
+# Learning Series: Network Programmability Basics
+# Module: Other Topics
+# Lesson: Introduction to NetScaler Programmability
+# Author: Hank Preston <hapresto@cisco.com>
+#
+# Illustrate the following concepts:
+# - Leveraging Ansible with NetScaler
+# - Setting up full LB configuration
+##############################################################
+---
+- name: Cleanup - Managing Loadbalancing Servers
+  hosts: lb
+  connection: local
+  gather_facts: False
+  vars_prompt:
+    - name: "prefix"
+      prompt: "What are your initials?"
+      private: no
+  vars:
+    services:
+      - name: "{{ prefix }}_Service1"
+        server:
+          name: "{{ prefix }}_Server1"
+
+    lbvservers:
+      - name: "{{ prefix }}_Application_1"
+
+
+  tasks:
+    - name: Delete Servers for Services
+      netscaler_server:
+        nsip: "{{ ansible_host }}"
+        nitro_protocol: https
+        validate_certs: no
+        nitro_user: "{{ username }}"
+        nitro_pass: "{{ password }}"
+        state: "absent"
+        name: "{{ item.server.name }}"
+      with_items: "{{ services }}"
+
+    - name: Delete Services
+      netscaler_service:
+        nsip: "{{ ansible_host }}"
+        nitro_protocol: https
+        validate_certs: no
+        nitro_user: "{{ username }}"
+        nitro_pass: "{{ password }}"
+        state: "absent"
+        name: "{{ item.name }}"
+      with_items: "{{ services }}"
+
+
+    - name: Delete Load Balancing vServers
+      netscaler_lb_vserver:
+        nsip: "{{ ansible_host }}"
+        nitro_protocol: https
+        validate_certs: no
+        nitro_user: "{{ username }}"
+        nitro_pass: "{{ password }}"
+        state: "absent"
+        name: "{{ item.name }}"
+      with_items: "{{ lbvservers }}"
+
+    - name: Save Configuration
+      netscaler_save_config:
+        nsip: "{{ ansible_host }}"
+        nitro_protocol: https
+        validate_certs: no
+        nitro_user: "{{ username }}"
+        nitro_pass: "{{ password }}"

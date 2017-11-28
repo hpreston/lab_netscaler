@@ -1,0 +1,251 @@
+{
+	"info": {
+		"name": "Citrix NetScaler",
+		"_postman_id": "b1306420-91d6-0fc0-379f-016c45774f29",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login and Create Session",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"login\": \n    { \n        \"username\":\"{{username}}\", \n        \"password\":\"{{password}}\" \n    } \n}"
+				},
+				"url": {
+					"raw": "https://{{nsip}}/nitro/v1/config/login",
+					"protocol": "https",
+					"host": [
+						"{{nsip}}"
+					],
+					"path": [
+						"nitro",
+						"v1",
+						"config",
+						"login"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Logout and End Session",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"logout\":{} \n}"
+				},
+				"url": {
+					"raw": "https://{{nsip}}/nitro/v1/config/logout",
+					"protocol": "https",
+					"host": [
+						"{{nsip}}"
+					],
+					"path": [
+						"nitro",
+						"v1",
+						"config",
+						"logout"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve List of lbvservers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://{{nsip}}/nitro/v1/config/lbvserver?attrs=name,lbmethod,ipv46,comment",
+					"protocol": "https",
+					"host": [
+						"{{nsip}}"
+					],
+					"path": [
+						"nitro",
+						"v1",
+						"config",
+						"lbvserver"
+					],
+					"query": [
+						{
+							"key": "attrs",
+							"value": "name,lbmethod,ipv46,comment",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create New lbvserver",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"lbvserver\": [\n        {\n            \"name\": \"{{app_name}}\",\n            \"ipv46\": \"192.168.1.102\",\n            \"port\": 80,\n            \"servicetype\": \"HTTP\",\n            \"lbmethod\": \"LEASTCONNECTION\",\n            \"backuplbmethod\": \"ROUNDROBIN\"\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "https://{{nsip}}/nitro/v1/config/lbvserver",
+					"protocol": "https",
+					"host": [
+						"{{nsip}}"
+					],
+					"path": [
+						"nitro",
+						"v1",
+						"config",
+						"lbvserver"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update an lbvserver",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"lbvserver\": [\n        {\n            \"name\": \"{{app_name}}\",\n            \"lbmethod\": \"ROUNDROBIN\",\n            \"backuplbmethod\": \"LEASTCONNECTION\", \n            \"comment\": \"Updated LB Method via API\"\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "https://{{nsip}}/nitro/v1/config/lbvserver/{{app_name}}",
+					"protocol": "https",
+					"host": [
+						"{{nsip}}"
+					],
+					"path": [
+						"nitro",
+						"v1",
+						"config",
+						"lbvserver",
+						"{{app_name}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Specific lbvserver",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://{{nsip}}/nitro/v1/config/lbvserver/{{app_name}}",
+					"protocol": "https",
+					"host": [
+						"{{nsip}}"
+					],
+					"path": [
+						"nitro",
+						"v1",
+						"config",
+						"lbvserver",
+						"{{app_name}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete an lbvserver",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://{{nsip}}/nitro/v1/config/lbvserver/{{app_name}}",
+					"protocol": "https",
+					"host": [
+						"{{nsip}}"
+					],
+					"path": [
+						"nitro",
+						"v1",
+						"config",
+						"lbvserver",
+						"{{app_name}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Save NetScaler Configuration",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"nsconfig\": \n    {} \n}"
+				},
+				"url": {
+					"raw": "https://{{nsip}}/nitro/v1/config/nsconfig?action=save",
+					"protocol": "https",
+					"host": [
+						"{{nsip}}"
+					],
+					"path": [
+						"nitro",
+						"v1",
+						"config",
+						"nsconfig"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "save",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

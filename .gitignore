@@ -1,0 +1,4 @@
+*.retry
+*.pyc
+ansible/hosts
+venv/
